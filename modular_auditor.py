@@ -24,6 +24,17 @@ def get_valid_input():
 
     return quantity
 
+def process_delivery(current_total, new_value):
+    # Manage state: running total
+    current_total += new_value
+    print(f"Added {new_value} units. Current total inventory: {current_total}")
+
+    # Trigger overstock alert
+    if current_total > 500:
+        print(f"ALERT: Overstock! Total inventory ({current_total}) exceeds 500 units.")
+
+    return current_total
+
 def main():
     total_inventory = 0
     failed_entries = 0
@@ -42,13 +53,10 @@ def main():
 
         quantity = result
 
-        # Manage state: running total
-        total_inventory += quantity
-        print(f"Added {quantity} units. Current total inventory: {total_inventory}")
+        total_inventory = process_delivery(total_inventory, quantity)
 
-        # Trigger overstock alert
+        # Trigger overstock alert (loop exit)
         if total_inventory > 500:
-            print(f"ALERT: Overstock! Total inventory ({total_inventory}) exceeds 500 units.")
             break
 
     # Reporting
