@@ -40,6 +40,12 @@ def calculate_tax(amount):
     tax = amount * 0.10
     return tax
 
+def generate_report(total_units, failed_attempts):
+    # Reporting
+    print("\n--- Final Report ---")
+    print(f"Total Deliveries Processed: {total_units}")
+    print(f"Number of Failed/Rejected Entries: {failed_attempts}")
+
 def main():
     total_inventory = 0
     failed_entries = 0
@@ -68,10 +74,7 @@ def main():
         if total_inventory > 500:
             break
 
-    # Reporting
-    print("\n--- Final Report ---")
-    print(f"Total Units Processed: {total_inventory}")
-    print(f"Number of Failed/Rejected Entries: {failed_entries}")
+    generate_report(total_inventory, failed_entries)
 
 
 if __name__ == "__main__":
