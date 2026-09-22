@@ -35,6 +35,11 @@ def process_delivery(current_total, new_value):
 
     return current_total
 
+def calculate_tax(amount):
+    # Tax is 10% of the delivery amount
+    tax = amount * 0.10
+    return tax
+
 def main():
     total_inventory = 0
     failed_entries = 0
@@ -54,6 +59,10 @@ def main():
         quantity = result
 
         total_inventory = process_delivery(total_inventory, quantity)
+
+        # Calculate tax for this delivery
+        tax_owed = calculate_tax(quantity)
+        print(f"Tax owed on this delivery: {tax_owed}")
 
         # Trigger overstock alert (loop exit)
         if total_inventory > 500:
