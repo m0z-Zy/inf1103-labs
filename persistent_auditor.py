@@ -46,6 +46,25 @@ def generate_report(total_units, failed_attempts):
     print(f"Total Deliveries Processed: {total_units}")
     print(f"Number of Failed/Rejected Entries: {failed_attempts}")
 
+def load_inventory():
+    #Read existing orders from orders.txt.
+    #If the file doesn't exist, create it empty and
+    #continue running without producing an error.
+    orders = []
+    try:
+        with open("orders.txt", "r") as f:
+            for line in f:
+                line = line.strip()
+                if line == "":
+                    continue
+                order_id, name, qty = line.split(",")
+                orders.append([order_id.strip(), name.strip(), int(qty.strip())])
+    except FileNotFoundError:
+        # File doesn't exist yet, create it empty
+        open("orders.txt", "w").close()
+
+    return orders
+
 def main():
     total_inventory = 0
     failed_entries = 0
@@ -64,7 +83,7 @@ def main():
 
         quantity = result
 
-        total_inventory = process_delivery(total_inventory, quantity)500
+        total_inventory = process_delivery(total_inventory, quantity)
 
         # Calculate tax for this delivery
         tax_owed = calculate_tax(quantity)
