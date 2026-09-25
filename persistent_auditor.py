@@ -66,35 +66,12 @@ def load_inventory():
     return orders
 
 def main():
-    total_inventory = 0
-    failed_entries = 0
+    orders = load_inventory()
 
-    while True:
-        result = get_valid_input()
-
-        # Exit condition
-        if result == "quit":
-            break
-
-        # Handle invalid input
-        if result is None:
-            failed_entries += 1
-            continue
-
-        quantity = result
-
-        total_inventory = process_delivery(total_inventory, quantity)
-
-        # Calculate tax for this delivery
-        tax_owed = calculate_tax(quantity)
-        print(f"Tax owed on this delivery: {tax_owed}")
-
-        # Trigger overstock alert (loop exit)
-        if total_inventory > 500:
-            break
-
-    generate_report(total_inventory, failed_entries)
-
+    # Show current orders
+    print("Current Orders:\n")
+    for order_id, name, qty in orders:
+        print(f"{order_id}, {name}, {qty}")
 
 if __name__ == "__main__":
     main()
