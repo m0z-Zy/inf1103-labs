@@ -65,6 +65,12 @@ def load_inventory():
 
     return orders
 
+def get_next_order_id(orders):
+    #Generate the next order ID based on existing orders (starts at 1001).
+    if not orders:
+        return 1001
+    return max(int(order[0]) for order in orders) + 1
+
 def main():
     orders = load_inventory()
 
@@ -72,6 +78,18 @@ def main():
     print("Current Orders:\n")
     for order_id, name, qty in orders:
         print(f"{order_id}, {name}, {qty}")
+
+    # Prompt for new order details
+    print()
+    product_name = input("Enter Product Name: ").strip()
+    quantity = int(input("Enter Quantity: ").strip())
+
+    # Create and add the new order
+    new_order_id = get_next_order_id(orders)
+    orders.append([str(new_order_id), product_name, quantity])
+
+    print("\nNew Order Added:")
+    print(f"{new_order_id},{product_name},{quantity}\n")
 
 if __name__ == "__main__":
     main()
