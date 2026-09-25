@@ -71,6 +71,13 @@ def get_next_order_id(orders):
         return 1001
     return max(int(order[0]) for order in orders) + 1
 
+def save_inventory(orders):
+    #Write all orders (existing + new) to orders.txt.
+    with open("orders.txt", "w") as f:
+        for order_id, name, qty in orders:
+            f.write(f"{order_id},{name},{qty}\n")
+    print("Order successfully saved to orders.txt")
+
 def main():
     orders = load_inventory()
 
@@ -84,12 +91,27 @@ def main():
     product_name = input("Enter Product Name: ").strip()
     quantity = int(input("Enter Quantity: ").strip())
 
-    # Create and add the new order
-    new_order_id = get_next_order_id(orders)
-    orders.append([str(new_order_id), product_name, quantity])
+    # Check if this product already exists in orders
+    existing_order = None
+    for order in orders:
+        if order[1].lower() == product_name.lower():
+            existing_order = order
+            break
 
-    print("\nNew Order Added:")
-    print(f"{new_order_id},{product_name},{quantity}\n")
+    if existing_order:
+        # Combine: add quantity to existing order
+        existing_order[2] += quantity
+        print("\nOrder Updated:")
+        print(f"{existing_order[0]},{existing_order[1]},{existing_order[2]}\n")
+    else:
+        # Create new order with next ID
+        new_order_id = get_next_order_id(orders)
+        orders.append([str(new_order_id), product_name, quantity])
+        print("\nNew Order Added:")
+        print(f"{new_order_id},{product_name},{quantity}\n")
+
+    # Persist to orders.txt
+    save_inventory(orders)
 
 if __name__ == "__main__":
     main()
