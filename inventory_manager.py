@@ -1,16 +1,21 @@
 import json
 import os
 
-# Check if the inventory file exists
-if os.path.exists("inventory.json"):
-    with open("inventory.json", "r") as f:
-        inventory = json.load(f)
-else:
-    inventory = [
-        {"id": "P001", "name": "Laptop", "price": 1200.00, "stock": 15},
-        {"id": "P002", "name": "Mouse", "price": 25.50, "stock": 40},
-        {"id": "P003", "name": "Keyboard", "price": 45.00, "stock": 25},
-    ]
+# Load inventory.json if it exists, otherwise return an empty list.
+def load_inventory():
+    if os.path.exists("inventory.json"):
+        with open("inventory.json", "r") as f:
+            inventory = json.load(f)
+        print("inventory.json found.")
+        print("Inventory loaded successfully.")
+        return inventory
+    print("inventory.json not found. Starting with empty inventory.")
+    return []
+
+# Write the inventory list to inventory.json.
+def save_inventory(inventory):
+    with open("inventory.json", "w") as f:
+        json.dump(inventory, f, indent=4)
 
 # Return the product dictionary with a matching ID, or None.
 def search_product(inventory, product_id):
@@ -56,6 +61,16 @@ def update_stock(inventory):
     print("\nStock updated successfully!")
 
 def main():
+    inventory = load_inventory()
+
+    # Seed starter products if nothing was loaded
+    if not inventory:
+        inventory = [
+            {"id": "P001", "name": "Laptop", "price": 1200.00, "stock": 15},
+            {"id": "P002", "name": "Mouse", "price": 25.50, "stock": 40},
+            {"id": "P003", "name": "Keyboard", "price": 45.00, "stock": 25},
+        ]
+
     while True:
         print("\nInventory Management System")
         print("1. Display All Products")
@@ -71,11 +86,8 @@ def main():
         elif choice == "3":
             update_stock(inventory)
         elif choice == "4":
-            with open("inventory.json", "w") as f:
-                json.dump(inventory, f, indent=4)
+            save_inventory(inventory)
             print("\nInventory saved. Exiting...")
             break
-        else:
-            print("\nInvalid choice. Please try again.")
 
 main()

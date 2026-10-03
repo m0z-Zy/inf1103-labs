@@ -18,9 +18,9 @@
         "stock": 25
     },
     {
-        "id": "1",
-        "name": "hui",
-        "price": 2.0,
-        "stock": 2
+        "id": "P004",
+        "name": "Monitor",
+        "price": 35.0,
+        "stock": 35
     }
 ]
