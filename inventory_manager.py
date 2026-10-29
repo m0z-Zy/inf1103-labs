@@ -108,9 +108,9 @@ def main():
 
     # Create starter products if the inventory is empty
     if inventory.is_empty():
-        inventory.add_product(Product("P001", "Laptop", 1200.00, 15))
-        inventory.add_product(Product("P002", "Mouse", 25.50, 40))
-        inventory.add_product(Product("P003", "Keyboard", 45.00, 25))
+        inventory.add_product(Product("01", "Laptop", 1200.00, 15))
+        inventory.add_product(Product("02", "Mouse", 25.50, 40))
+        inventory.add_product(Product("03", "Keyboard", 45.00, 25))
 
     while True:
         show_menu()
