@@ -1,0 +1,26 @@
+[
+    {
+        "id": "P01",
+        "name": "Laptop",
+        "price": 1200.0,
+        "stock": 15,
+        "type": "physical",
+        "weight": 2.1
+    },
+    {
+        "id": "P02",
+        "name": "Mouse",
+        "price": 25.5,
+        "stock": 40,
+        "type": "physical",
+        "weight": 0.1
+    },
+    {
+        "id": "D01",
+        "name": "Operating System",
+        "price": 99.0,
+        "stock": 100,
+        "type": "digital",
+        "download_size": 4500.0
+    }
+]

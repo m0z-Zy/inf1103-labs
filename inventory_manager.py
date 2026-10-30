@@ -1,8 +1,21 @@
 import json
 import os
 
-from product import Product
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
 from inventory import Inventory
+
+# Build the correct Product subclass from a dictionary read from the JSON file.
+# Raises KeyError or ValueError if the entry is missing data or has an unknown type.
+def create_product(item):
+    product_type = item["type"]
+    if product_type == "physical":
+        return PhysicalProduct(item["id"], item["name"], item["price"],
+                               item["stock"], item["weight"])
+    if product_type == "digital":
+        return DigitalProduct(item["id"], item["name"], item["price"],
+                              item["stock"], item["download_size"])
+    raise ValueError(f"unknown product type '{product_type}'")
 
 # Load inventory.json if it exists and return an Inventory of Product objects.
 # If the file does not exist, return an empty Inventory.
@@ -12,42 +25,56 @@ def load_inventory():
         with open("inventory.json", "r") as f:
             data = json.load(f)
         for item in data:
-            inventory.add_product(
-                Product(item["id"], item["name"], item["price"], item["stock"])
-            )
+            try:
+                inventory.add_product(create_product(item))
+            except (KeyError, ValueError) as error:
+                print(f"Skipped an entry in inventory.json: missing or invalid value {error}.")    
         print("inventory.json found.")
         print("Inventory loaded successfully.")
         return inventory
     print("inventory.json not found. Starting with empty inventory.")
     return inventory
 
-
 # Write the inventory to inventory.json
 def save_inventory(inventory):
     with open("inventory.json", "w") as f:
         json.dump(inventory.to_dict_list(), f, indent=4)
 
-
-# Ask for product details and add a new product to the inventory
+# Ask for product details and add a new physical or digital product
 def add_product(inventory):
     print("\nAdd New Product")
     product_id = input("Product ID: ").strip()
     if inventory.search_product(product_id) is not None:
         print("A product with that ID already exists.")
         return
+    print("\nProduct Type")
+    print("1. Physical Product")
+    print("2. Digital Product")
+    type_choice = input("Choose type (1-2): ").strip()
+    if type_choice not in ("1", "2"):
+        print("\nInvalid product type. Product not added.")
+        return
     name = input("Product Name: ").strip()
     try:
         price = float(input("Price: "))
         stock = int(input("Stock Quantity: "))
-        product = Product(product_id, name, price, stock)
+        if type_choice == "1":
+            weight = float(input("Weight (kg): "))
+            if weight < 0:
+                raise ValueError("negative weight")
+            product = PhysicalProduct(product_id, name, price, stock, weight)
+        else:
+            download_size = float(input("Download Size (MB): "))
+            if download_size < 0:
+                raise ValueError("negative download size")
+            product = DigitalProduct(product_id, name, price, stock, download_size)
         product.update_stock(stock)  # reuse the Product's own stock validation
     except ValueError:
-        print("\nInvalid input. Price must be a number and stock a "
-              "non-negative whole number. Product not added.")
+        print("\nInvalid input. Price, weight/size must be numbers (not negative) "
+              "and stock a non-negative whole number. Product not added.")
         return
     inventory.add_product(product)
     print("\nProduct added successfully!")
-
 
 # Ask for a product ID, then set a new stock quantity
 def update_stock(inventory):
@@ -68,7 +95,6 @@ def update_stock(inventory):
         return
     print("\nStock updated successfully!")
 
-
 # Ask for a product ID and display the product if found
 def search_menu(inventory):
     print("\nSearch Product")
@@ -79,12 +105,9 @@ def search_menu(inventory):
         return
     print("\nProduct Found")
     print("-" * 47)
-    print(f"ID: {product.get_product_id()}")
-    print(f"Name: {product.get_name()}")
-    print(f"Price: ${product.get_price():.2f}")
-    print(f"Stock: {product.get_stock()}")
+    product.display_information()
+    print(product.get_fulfilment_info())
     print("-" * 47)
-
 
 # Print the menu options
 def show_menu():
@@ -97,7 +120,6 @@ def show_menu():
     print("6. Exit")
     print("-" * 26)
 
-
 def main():
     print("=" * 40)
     print("INVENTORY MANAGEMENT SYSTEM")
@@ -107,9 +129,9 @@ def main():
 
     # Create starter products if the inventory is empty
     if inventory.is_empty():
-        inventory.add_product(Product("01", "Laptop", 1200.00, 15))
-        inventory.add_product(Product("02", "Mouse", 25.50, 40))
-        inventory.add_product(Product("03", "Keyboard", 45.00, 25))
+        inventory.add_product(PhysicalProduct("P01", "Laptop", 1200.00, 15, 2.1))
+        inventory.add_product(PhysicalProduct("P02", "Mouse", 25.50, 40, 0.1))
+        inventory.add_product(DigitalProduct("D01", "Operating System", 99.00, 100, 4500.0))
 
     while True:
         show_menu()
@@ -136,6 +158,5 @@ def main():
             break
         else:
             print("\nInvalid option. Please choose 1-6.")
-
 
 main()
