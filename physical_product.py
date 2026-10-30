@@ -10,6 +10,10 @@ class PhysicalProduct(Product):
     def get_weight(self):
         return self.__weight
 
+    # New function: get_fulfilment_info
+    def get_fulfilment_info(self):
+        return "Physical product: requires physical shipping."
+
     # New function: display_information
     def display_information(self):
         super().display_information()

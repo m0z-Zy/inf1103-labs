@@ -10,6 +10,10 @@ class DigitalProduct(Product):
     def get_download_size(self):
         return self.__download_size
 
+    # New function: get_fulfilment_info
+    def get_fulfilment_info(self):
+        return "Digital product: delivered digitally via download."
+
     # New function: display_information
     def display_information(self):
         super().display_information()
