@@ -22,5 +22,13 @@
         "stock": 100,
         "type": "digital",
         "download_size": 4500.0
+    },
+    {
+        "id": "D02",
+        "name": "Antivirus Application",
+        "price": 50.0,
+        "stock": 25,
+        "type": "digital",
+        "download_size": 10000.0
     }
 ]
