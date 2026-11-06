@@ -4,11 +4,12 @@ import os
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
 from inventory import Inventory
+from product import Product
 from supplier import Supplier
 
 # Load inventory.json if it exists and return an Inventory of Product objects.
 # If the file does not exist, return an empty Inventory.
-def load_inventory():
+def load_inventory() -> Inventory:
     inventory = Inventory()
     if os.path.exists("inventory.json"):
         with open("inventory.json", "r") as f:
@@ -25,12 +26,12 @@ def load_inventory():
     return inventory
 
 # Write the inventory to inventory.json
-def save_inventory(inventory):
+def save_inventory(inventory: Inventory) -> None:
     with open("inventory.json", "w") as f:
         json.dump(inventory.to_dict_list(), f, indent=4)
 
 # Ask for product details and add a new physical or digital product
-def add_product(inventory):
+def add_product(inventory: Inventory) -> None:
     print("\nAdd New Product")
     product_id = input("Product ID: ").strip()
     if inventory.find_product(product_id) is not None:
@@ -69,7 +70,7 @@ def add_product(inventory):
     print("\nProduct added successfully!")
 
 # Ask for a product ID, then set a new stock quantity
-def update_stock(inventory):
+def update_stock(inventory: Inventory) -> None:
     print("\nUpdate Stock")
     product_id = input("Enter Product ID: ").strip()
     product = inventory.find_product(product_id)
@@ -88,7 +89,7 @@ def update_stock(inventory):
     print("\nStock updated successfully!")
 
 # Ask for a product ID and display the product if found
-def search_menu(inventory):
+def search_menu(inventory: Inventory) -> None:
     print("\nSearch Product")
     product_id = input("Enter Product ID: ").strip()
     product = inventory.find_product(product_id)
@@ -103,7 +104,7 @@ def search_menu(inventory):
 
 # Build the correct Product subclass from a dictionary read from the JSON file.
 # Raises KeyError or ValueError if the entry is missing data or has an unknown type.
-def create_product(item):
+def create_product(item: dict) -> Product:
     product_type = item["type"]
     supplier = item.get("supplier")
     if product_type == "physical":
@@ -116,13 +117,13 @@ def create_product(item):
 
 # Build a Supplier from a dictionary in inventory.json.
 # Older files without supplier data get an "Unassigned" supplier.
-def create_supplier(data):
+def create_supplier(data: dict | None) -> Supplier:
     if data is None:
         return Supplier("S00", "Unassigned", "none@example.com")
     return Supplier(data["id"], data["name"], data["email"])
 
 # Print the menu options
-def show_menu():
+def show_menu() -> None:
     print("\n----------- MENU -----------")
     print("1. Display All Products")
     print("2. Add Product")
@@ -132,7 +133,7 @@ def show_menu():
     print("6. Exit")
     print("-" * 26)
 
-def main():
+def main() -> None:
     print("=" * 40)
     print("INVENTORY MANAGEMENT SYSTEM")
     print("=" * 40 + "\n")

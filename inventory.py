@@ -2,7 +2,7 @@ from product import Product
 
 class Inventory:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__products: list[Product] = []
 
     def add_product(self, product: Product) -> bool:
@@ -24,15 +24,15 @@ class Inventory:
                 return product
         return None
 
-    def display_all(self):
+    def display_all(self) -> None:
         print("\nCurrent Inventory")
         print("-" * 47)
         for product in self.__products:
             product.display_information()
         print("-" * 47)
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return len(self.__products) == 0
 
-    def to_dict_list(self):
+    def to_dict_list(self) -> list[dict]:
         return [product.to_dict() for product in self.__products]
