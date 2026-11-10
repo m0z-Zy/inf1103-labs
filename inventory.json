@@ -4,6 +4,11 @@
         "name": "Laptop",
         "price": 1200.0,
         "stock": 15,
+        "supplier": {
+            "id": "S01",
+            "name": "TechSource Ltd",
+            "email": "sales@techsource.com"
+        },
         "type": "physical",
         "weight": 2.1
     },
@@ -12,6 +17,11 @@
         "name": "Mouse",
         "price": 25.5,
         "stock": 40,
+        "supplier": {
+            "id": "S01",
+            "name": "TechSource Ltd",
+            "email": "sales@techsource.com"
+        },
         "type": "physical",
         "weight": 0.1
     },
@@ -20,15 +30,12 @@
         "name": "Operating System",
         "price": 99.0,
         "stock": 100,
+        "supplier": {
+            "id": "S01",
+            "name": "TechSource Ltd",
+            "email": "sales@techsource.com"
+        },
         "type": "digital",
         "download_size": 4500.0
-    },
-    {
-        "id": "D02",
-        "name": "Antivirus Application",
-        "price": 50.0,
-        "stock": 25,
-        "type": "digital",
-        "download_size": 10000.0
     }
 ]

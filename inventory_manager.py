@@ -12,8 +12,12 @@ from supplier import Supplier
 def load_inventory() -> Inventory:
     inventory = Inventory()
     if os.path.exists("inventory.json"):
-        with open("inventory.json", "r") as f:
-            data = json.load(f)
+        try:
+            with open("inventory.json", "r") as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            print(f"inventory.json is empty or invalid. Starting with empty inventory.")
+            return inventory
         for item in data:
             try:
                 inventory.add_product(create_product(item))
