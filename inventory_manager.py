@@ -111,7 +111,7 @@ def search_menu(inventory: Inventory) -> None:
 # Raises KeyError or ValueError if the entry is missing data or has an unknown type.
 def create_product(item: dict) -> Product:
     product_type = item["type"]
-    supplier = item.get("supplier")
+    supplier = create_supplier(item.get("supplier"))
     if product_type == "physical":
         return PhysicalProduct(item["id"], item["name"], item["price"],
                                item["stock"], item["weight"], supplier)
