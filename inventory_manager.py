@@ -48,6 +48,7 @@ def add_product(inventory: Inventory) -> None:
     supplier = Supplier(input("Supplier ID: ").strip(),
                         input("Supplier Name: ").strip(),
                         input("Supplier Email: ").strip())
+    product: Product
     try:
         price = float(input("Price: "))
         stock = int(input("Stock Quantity: "))

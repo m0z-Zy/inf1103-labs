@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from supplier import Supplier
 
 class Product(ABC):
+    
     def __init__(self, product_id: str, name: str, price: float, stock: int, supplier: Supplier) -> None:
         self.__product_id: str = product_id
         self.__name: str = name
