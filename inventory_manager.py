@@ -1,8 +1,7 @@
 import json
 import os
 
-from physical_product import PhysicalProduct
-from digital_product import DigitalProduct
+from product_factory import ProductFactory
 from inventory import Inventory
 from product import Product
 from supplier import Supplier
@@ -57,15 +56,16 @@ def add_product(inventory: Inventory) -> None:
         price = float(input("Price: "))
         stock = int(input("Stock Quantity: "))
         if type_choice == "1":
-            weight = float(input("Weight (kg): "))
-            if weight < 0:
+            product_type = "physical"
+            extra_value = float(input("Weight (kg): "))
+            if extra_value < 0:
                 raise ValueError("negative weight")
-            product = PhysicalProduct(product_id, name, price, stock, weight, supplier)
         else:
-            download_size = float(input("Download Size (MB): "))
-            if download_size < 0:
+            product_type = "digital"
+            extra_value = float(input("Download Size (MB): "))
+            if extra_value < 0:
                 raise ValueError("negative download size")
-            product = DigitalProduct(product_id, name, price, stock, download_size, supplier)
+        product = ProductFactory.create(product_type, product_id, name, price, stock, supplier, extra_value)
         product.update_stock(stock)
     except ValueError:
         print("\nInvalid input. Price, weight/size must be numbers (not negative) "
@@ -112,13 +112,10 @@ def search_menu(inventory: Inventory) -> None:
 def create_product(item: dict) -> Product:
     product_type = item["type"]
     supplier = create_supplier(item.get("supplier"))
-    if product_type == "physical":
-        return PhysicalProduct(item["id"], item["name"], item["price"],
-                               item["stock"], item["weight"], supplier)
-    if product_type == "digital":
-        return DigitalProduct(item["id"], item["name"], item["price"],
-                              item["stock"], item["download_size"], supplier)
-    raise ValueError(f"unknown product type '{product_type}'")
+    extra_value = item.get("weight", item.get("download_size"))
+    if extra_value is None:
+        raise ValueError("missing weight or download_size")
+    return ProductFactory.create(product_type, item["id"], item["name"], item["price"], item["stock"], supplier, extra_value)
 
 # Build a Supplier from a dictionary in inventory.json.
 # Older files without supplier data get an "Unassigned" supplier.
@@ -148,9 +145,9 @@ def main() -> None:
     # Create starter products if the inventory is empty
     if inventory.is_empty():
         starter_supplier = Supplier("S01", "TechSource Ltd", "sales@techsource.com")
-        inventory.add_product(PhysicalProduct("P01", "Laptop", 1200.00, 15, 2.1, starter_supplier))
-        inventory.add_product(PhysicalProduct("P02", "Mouse", 25.50, 40, 0.1, starter_supplier))
-        inventory.add_product(DigitalProduct("D01", "Operating System", 99.00, 100, 4500.0, starter_supplier))
+        inventory.add_product(ProductFactory.create("physical", "P01", "Laptop", 1200.00, 15, starter_supplier, 2.1))
+        inventory.add_product(ProductFactory.create("physical", "P02", "Mouse", 25.50, 40, starter_supplier, 0.1))
+        inventory.add_product(ProductFactory.create("digital", "D01", "Operating System", 99.00, 100, starter_supplier, 4500.0))
 
     while True:
         show_menu()
