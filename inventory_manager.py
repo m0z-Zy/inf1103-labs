@@ -176,4 +176,5 @@ def main() -> None:
         else:
             print("\nInvalid option. Please choose 1-6.")
 
-main()
+if __name__ == "__main__":
+    main()
