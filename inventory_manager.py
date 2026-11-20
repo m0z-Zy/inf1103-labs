@@ -2,6 +2,7 @@ import json
 import os
 
 from product_factory import ProductFactory
+from input_helpers import get_positive_float
 from inventory import Inventory
 from product import Product
 from supplier import Supplier
@@ -53,7 +54,7 @@ def add_product(inventory: Inventory) -> None:
                         input("Supplier Email: ").strip())
     product: Product
     try:
-        price = float(input("Price: "))
+        price = get_positive_float("Price: ")
         stock = int(input("Stock Quantity: "))
         if type_choice == "1":
             product_type = "physical"
